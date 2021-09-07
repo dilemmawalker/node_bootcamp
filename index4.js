@@ -1,13 +1,17 @@
 //creating a short API
 const fs=require('fs');
 const http=require('http');
+const url=require('url');
 
-let changes=(val,tempcard)=>{
-   let output=tempcard.replace("{%image%}",val.image);    
-    output=output.replace("{%productname%}",val.productName);
-    output= output.replace("{%quantity%}",val.quantity);
-    output=output.replace("{%price%}",val.price);
-    output=output.replace("{%id%}",val.id);
+let changes=(val,temp)=>{
+   let output=temp.replace(/{%image%}/g,val.image);
+    output=output.replace(/{%productname%}/g,val.productName);
+    output= output.replace(/{%quantity%}/g,val.quantity);
+    output=output.replace(/{%price%}/g,val.price);
+    output=output.replace(/{%from%}/g,val.from);
+    output=output.replace(/{%nutrients%}/g,val.nutrients);
+    output=output.replace(/{%id%}/g,val.id);
+    output=output.replace(/{%description}/g,val.description);
   
     if(val.organic)
     output= output.replace("{%not_organic%}","Organic");
@@ -17,9 +21,16 @@ let changes=(val,tempcard)=>{
 }
 
 let server=http.createServer((req,res)=>{
-    let pathname=req.url;
+    // console.log(req.url);
+    // console.log(url.parse(req.url,true));
+
+    const {query,pathname} = url.parse(req.url,true);
+
+    // let pathname=req.url;
     let data_json=fs.readFileSync(`${__dirname}/dev-data/data.json`,'utf-8');
     let data_object=JSON.parse(data_json);
+    // console.log(data_json);
+    // console.log(data_object);
 
     let tempoverview=fs.readFileSync(`${__dirname}/templates/template-overview.html`,'utf-8');
     let tempcard=fs.readFileSync(`${__dirname}/templates/template-card.html`,'utf-8');
@@ -33,7 +44,7 @@ let server=http.createServer((req,res)=>{
         let cardshtml=data_object.map((val)=>{          //CPU of program.
             return changes(val,tempcard);
         })                             //join to conver into string;
-        console.log(cardshtml);
+        // console.log(cardshtml);
         cardshtml=cardshtml.join('');   
 
         const output=tempoverview.replace("{%product-cards%}",cardshtml);
@@ -41,7 +52,13 @@ let server=http.createServer((req,res)=>{
     }
     //product page
     else if(pathname=='/product'){
-        res.end("we are still working");
+        // console.log(query);
+        
+        let idx=query.id;
+        // console.log(data_object[idx]);
+       let changed= changes(data_object[idx],tempproduct);
+
+        res.end(changed);
     }
     //API
     else if(pathname=='/api'){
