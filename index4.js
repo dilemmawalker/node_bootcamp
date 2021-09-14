@@ -3,7 +3,9 @@ const fs=require('fs');
 const http=require('http');
 const url=require('url');
 
-const changes=require('./modules/replacetemplate');
+const changes=require('./modules/replacetemplate');         //we keep name "changes" same as function name
+                                                            //we define, just import it as module rather than
+                                                            //using directly.
 
 // let changes=(val,temp)=>{
 //    let output=temp.replace(/{%image%}/g,val.image);
