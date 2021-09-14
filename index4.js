@@ -3,22 +3,24 @@ const fs=require('fs');
 const http=require('http');
 const url=require('url');
 
-let changes=(val,temp)=>{
-   let output=temp.replace(/{%image%}/g,val.image);
-    output=output.replace(/{%productname%}/g,val.productName);
-    output= output.replace(/{%quantity%}/g,val.quantity);
-    output=output.replace(/{%price%}/g,val.price);
-    output=output.replace(/{%from%}/g,val.from);
-    output=output.replace(/{%nutrients%}/g,val.nutrients);
-    output=output.replace(/{%id%}/g,val.id);
-    output=output.replace(/{%description}/g,val.description);
+const changes=require('./modules/replacetemplate');
+
+// let changes=(val,temp)=>{
+//    let output=temp.replace(/{%image%}/g,val.image);
+//     output=output.replace(/{%productname%}/g,val.productName);
+//     output= output.replace(/{%quantity%}/g,val.quantity);
+//     output=output.replace(/{%price%}/g,val.price);
+//     output=output.replace(/{%from%}/g,val.from);
+//     output=output.replace(/{%nutrients%}/g,val.nutrients);
+//     output=output.replace(/{%id%}/g,val.id);
+//     output=output.replace(/{%description}/g,val.description);
   
-    if(val.organic)
-    output= output.replace("{%not_organic%}","Organic");
-    else
-    output=output.replace("{%not_organic%}","not-organic");
-    return output;
-}
+//     if(val.organic)
+//     output= output.replace("{%not_organic%}","Organic");
+//     else
+//     output=output.replace("{%not_organic%}","not-organic");
+//     return output;
+// }
 
 let server=http.createServer((req,res)=>{
     // console.log(req.url);
@@ -43,9 +45,9 @@ let server=http.createServer((req,res)=>{
         });
         let cardshtml=data_object.map((val)=>{          //CPU of program.
             return changes(val,tempcard);
-        })                             //join to conver into string;
+        })                            
         // console.log(cardshtml);
-        cardshtml=cardshtml.join('');   
+        cardshtml=cardshtml.join('');    //join to conver into string;
 
         const output=tempoverview.replace("{%product-cards%}",cardshtml);
         res.end(output);
