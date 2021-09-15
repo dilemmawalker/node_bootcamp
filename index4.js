@@ -3,6 +3,8 @@ const fs=require('fs');
 const http=require('http');
 const url=require('url');
 
+const slugify=require('slugify');
+
 const changes=require('./modules/replacetemplate');         //we keep name "changes" same as function name
                                                             //we define, just import it as module rather than
                                                             //using directly.
@@ -35,6 +37,11 @@ let server=http.createServer((req,res)=>{
     let data_object=JSON.parse(data_json);
     // console.log(data_json);
     // console.log(data_object);
+
+    const slugs=data_object.map((val)=>{
+        return slugify(val.productName,{lower:true})
+    });
+    console.log(slugs);
 
     let tempoverview=fs.readFileSync(`${__dirname}/templates/template-overview.html`,'utf-8');
     let tempcard=fs.readFileSync(`${__dirname}/templates/template-card.html`,'utf-8');
