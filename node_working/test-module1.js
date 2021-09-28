@@ -17,4 +17,3 @@ module.exports=calc;
 //         return a*b;
 //     }
 // }
-//
