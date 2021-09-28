@@ -13,7 +13,14 @@ const calc2=require('./test-module2.js');      //exports
 // console.log(calc2.add(2,4));
 
 
-//best way
-const {add,multiply}=require("./test-module2.js");
-console.log(add(2,3));
-console.log(multiply(2,8));
+const {add,multiply}=require("./test-module2.js");  //best way
+// console.log(add(2,3));
+// console.log(multiply(2,8));
+
+//cashing proof
+require("./test-module3.js")();
+require("./test-module3.js")();
+require("./test-module3.js")();
+//      O/P proves that whole module is not loaded again & again,
+//      rather it is stored as cache memory & accessed i.e.
+//      loading happens only once.
