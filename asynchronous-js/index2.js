@@ -28,8 +28,8 @@ const writeFilePro=(file,data)=>{
 readFilePro("dog.txt").then((data)=>{
     console.log("Breed: " +data);
 
-return superagent.get(`https://dog.ceo/api/breed/${data}/images/random`)})
-    .then((res)=>{
+return superagent.get(`https://dog.ceo/api/breed/${data}/images/random`)
+    }).then((res)=>{
         console.log(res.body.message);
 
         return writeFilePro("dog-image.txt",res.body.message);
