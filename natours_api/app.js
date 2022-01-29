@@ -87,6 +87,43 @@ app.get("/api/v1/tours/:id", (req, res) => {
 //   res.send(JSON.parse(file));
 // });
 
+app.patch("/api/v1/tours/:id", (req, res) => {
+  const id = req.params.id * 1;
+  fs.readFile(
+    `${__dirname}/starter/dev-data/data/tours-simple.json`,
+    (err, data) => {
+      const tours = JSON.parse(data);
+      // const tour = tours.find(ele => ele.id === id);
+      let tour, getidx;
+
+      for (let i = 0; i < tours.length; i++) {
+        if (tours[i].id === id) {
+          tour = tours[i];
+          getidx = i;
+          break;
+        }
+      }
+      console.log(req.body);
+
+      for (let key in req.body) {
+        let value = req.body[`${key}`];
+        console.log(`${key}: ${value}`);
+        tour[`${key}`] = value;
+      }
+
+      tours[getidx] = tour;
+      console.log(tour);
+      fs.writeFile(
+        `${__dirname}/starter/dev-data/data/tours-simple.json`,
+        JSON.stringify(tours),
+        err => {
+          res.send(tours);
+        }
+      );
+    }
+  );
+});
+
 const port = 3000;
 app.listen(port, () => {
   console.log("I am listening");
