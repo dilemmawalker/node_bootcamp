@@ -124,6 +124,34 @@ app.patch("/api/v1/tours/:id", (req, res) => {
   );
 });
 
+app.delete("/api/v1/tours/:id", (req, res) => {
+  fs.readFile(
+    `${__dirname}/starter/dev-data/data/tours-simple.json`,
+    (err, data) => {
+      let tours = JSON.parse(data);
+      const id = req.params.id * 1;
+      let getidx = 0;
+
+      for (let i = 0; i < tours.length; i++) {
+        const ele = tours[i];
+        if (ele.id === id) {
+          getidx = i;
+          break;
+        }
+      }
+      tours.splice(getidx, 1);
+      console.log(tours);
+      fs.writeFile(
+        `${__dirname}/starter/dev-data/data/tours-simple.json`,
+        JSON.stringify(tours),
+        err => {
+          res.send(tours);
+        }
+      );
+    }
+  );
+});
+
 const port = 3000;
 app.listen(port, () => {
   console.log("I am listening");
