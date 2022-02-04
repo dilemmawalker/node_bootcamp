@@ -5,15 +5,15 @@ app = express();
 
 app.use(express.json()); //middleware
 
-app.get("/", (req, res) => {
+const checking = (req, res) => {
   res.send("server says hello");
-});
+};
 
-app.post("/", (req, res) => {
+const check_post = (req, res) => {
   res.status(200).json({ message: "Hello World", text: "meri marzi" });
-});
+};
 
-app.get("/api/v1/tours", (req, res) => {
+const getAllTours = (req, res) => {
   const file = JSON.parse(
     fs.readFileSync(
       `${__dirname}/starter/dev-data/data/tours-simple.json`,
@@ -27,9 +27,9 @@ app.get("/api/v1/tours", (req, res) => {
   );
   console.log(file);
   res.send(file);
-});
+};
 
-app.get("/api/v1/tours", (req, res) => {
+const lengthAndTours = (req, res) => {
   const file = fs.readFile(
     `${__dirname}/starter/dev-data/data/tours-simple.json`,
     (err, data) => {
@@ -43,9 +43,9 @@ app.get("/api/v1/tours", (req, res) => {
       });
     }
   );
-});
+};
 
-app.post("/api/v1/tours", (req, res) => {
+const createNewTour = (req, res) => {
   const file = fs.readFile(
     `${__dirname}/starter/dev-data/data/tours-simple.json`,
     (err, data) => {
@@ -62,9 +62,9 @@ app.post("/api/v1/tours", (req, res) => {
       );
     }
   );
-});
+};
 
-app.get("/api/v1/tours/:id", (req, res) => {
+const getParticularTour = (req, res) => {
   const data = fs.readFile(
     `${__dirname}/starter/dev-data/data/tours-simple.json`,
     (err, d) => {
@@ -76,7 +76,7 @@ app.get("/api/v1/tours/:id", (req, res) => {
       else res.status(400).send("not found");
     }
   );
-});
+};
 // const file = fs.readFileSync(              //reading synchronously file & then sending result.
 //   `${__dirname}/starter/dev-data/data/tours-simple.json`,
 //   (err, data) => {
@@ -87,7 +87,7 @@ app.get("/api/v1/tours/:id", (req, res) => {
 //   res.send(JSON.parse(file));
 // });
 
-app.patch("/api/v1/tours/:id", (req, res) => {
+const updatingParticularTour = (req, res) => {
   const id = req.params.id * 1;
   fs.readFile(
     `${__dirname}/starter/dev-data/data/tours-simple.json`,
@@ -122,9 +122,9 @@ app.patch("/api/v1/tours/:id", (req, res) => {
       );
     }
   );
-});
+};
 
-app.delete("/api/v1/tours/:id", (req, res) => {
+const deleteParticularTour = (req, res) => {
   fs.readFile(
     `${__dirname}/starter/dev-data/data/tours-simple.json`,
     (err, data) => {
@@ -150,7 +150,16 @@ app.delete("/api/v1/tours/:id", (req, res) => {
       );
     }
   );
-});
+};
+
+app.get("/", checking);
+app.post("/", check_post);
+app.get("/api/v1/tours", getAllTours);
+app.get("/api/v1/tours", lengthAndTours);
+app.post("/api/v1/tours", createNewTour);
+app.get("/api/v1/tours/:id", getParticularTour);
+app.patch("/api/v1/tours/:id", updatingParticularTour);
+app.delete("/api/v1/tours/:id", deleteParticularTour);
 
 const port = 3000;
 app.listen(port, () => {
