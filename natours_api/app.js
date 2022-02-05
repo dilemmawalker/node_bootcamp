@@ -1,8 +1,10 @@
 const express = require("express");
 const fs = require("fs");
+const morgan = require("morgan");
 
 app = express();
 
+app.use(morgan("dev")); //predefined middleware from npm package.
 app.use(express.json()); //middleware
 
 const checking = (req, res) => {
@@ -152,15 +154,65 @@ const deleteParticularTour = (req, res) => {
   );
 };
 
-app.get("/", checking);
-app.post("/", check_post);
-app.get("/api/v1/tours", getAllTours);
-app.get("/api/v1/tours", lengthAndTours);
-app.post("/api/v1/tours", createNewTour);
-app.get("/api/v1/tours/:id", getParticularTour);
-app.patch("/api/v1/tours/:id", updatingParticularTour);
-app.delete("/api/v1/tours/:id", deleteParticularTour);
+const getAllUsers = (req, res) => {
+  res.status(500).send("Not yet implemented");
+};
+const createUser = (req, res) => {
+  res.status(500).send("Not yet implemented");
+};
+const getUser = (req, res) => {
+  res.status(500).send("Not yet implemented");
+};
+const updateUser = (req, res) => {
+  res.status(500).send("Not yet implemented");
+};
+const deleteUser = (req, res) => {
+  res.status(500).send("Not yet implemented");
+};
 
+// app.get("/", checking);            //basic method
+// app.post("/", check_post);
+// app.get("/api/v1/tours", getAllTours);
+// app.get("/api/v1/tours", lengthAndTours);
+// app.post("/api/v1/tours", createNewTour);
+// app.get("/api/v1/tours/:id", getParticularTour);
+// app.patch("/api/v1/tours/:id", updatingParticularTour);
+// app.delete("/api/v1/tours/:id", deleteParticularTour);
+
+app.use((req, res, next) => {
+  //route handler
+  console.log("middleware!!!");
+  next();
+});
+
+app //better method
+  .route("/")
+  .get(checking)
+  .post(check_post);
+app
+  .route("/api/v1/tours")
+  .get(getAllTours)
+  .get(lengthAndTours)
+  .post(createNewTour);
+
+app
+  .route("/api/v1/tours/:id")
+  .get(getParticularTour)
+  .patch(updatingParticularTour)
+  .delete(deleteParticularTour);
+
+app
+  .route("/api/v1/users")
+  .get(getAllUsers)
+  .post(createUser);
+
+app
+  .route("/api/v1/urers/:id")
+  .get(getUser)
+  .patch(updateUser)
+  .delete(deleteUser);
+
+//start server
 const port = 3000;
 app.listen(port, () => {
   console.log("I am listening");
