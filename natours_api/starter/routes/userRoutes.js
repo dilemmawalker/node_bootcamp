@@ -2,22 +2,13 @@ const express = require('express');
 
 const userRouter = express.Router();
 const fs = require('fs');
-
-const getAllUsers = (req, res) => {
-  res.status(500).send('Not yet implemented');
-};
-const createUser = (req, res) => {
-  res.status(500).send('Not yet implemented');
-};
-const getUser = (req, res) => {
-  res.status(500).send('Not yet implemented');
-};
-const updateUser = (req, res) => {
-  res.status(500).send('Not yet implemented');
-};
-const deleteUser = (req, res) => {
-  res.status(500).send('Not yet implemented');
-};
+const {
+  getAllUsers,
+  createUser,
+  getUser,
+  updateUser,
+  deleteUser
+} = require(`${__dirname}/../controller/userController`);
 
 // app.get("/", checking);            //basic method
 // app.post("/", check_post);
