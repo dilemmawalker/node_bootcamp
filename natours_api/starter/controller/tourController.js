@@ -1,3 +1,5 @@
+const Tour = require(`./../models/tourModel`);
+
 const fs = require('fs');
 exports.checking = (req, res) => {
   res.send('server says hello');
@@ -7,69 +9,62 @@ exports.check_post = (req, res) => {
   res.status(200).json({ message: 'Hello World', text: 'meri marzi' });
 };
 
-exports.getAllTours = (req, res) => {
-  const file = JSON.parse(
-    fs.readFileSync(
-      `${__dirname}/../dev-data/data/tours-simple.json`,
-      (err, data) => {
-        // if (err) console.log("error");
-        // else
-        console.log(JSON.parse(data));
-        return JSON.parse(data);
-      }
-    )
-  );
-  console.log(file);
-  res.send(file);
+exports.getAllTours = async(req, res) => {
+  try{
+    const Tours = await Tour.find();
+    console.log(Tours);
+    return res.status(201).send(Tours);
+  }catch(err){
+    console.log(err);
+    res.status(400).send(err);
+  }
+
 };
 
-exports.lengthAndTours = (req, res) => {
-  const file = fs.readFile(
-    `${__dirname}/starter/dev-data/data/tours-simple.json`,
-    (err, data) => {
-      let tour = JSON.parse(data);
-      // console.log(JSON.parse(data));
-      // res.send(JSON.parse(data));
-      res.json({
-        status: 'success',
-        length: tour.length,
-        data: JSON.parse(data)
-      });
-    }
-  );
+exports.lengthAndTours = async (req, res) => {
+  try{
+    const Tours = await Tour.find();
+    return res.send(Tours.length());
+  }
+  catch(err){
+    console.log(err)
+    return res.send(err);
+  }
 };
 
-exports.createNewTour = (req, res) => {
-  const file = fs.readFile(
-    `${__dirname}/starter/dev-data/data/tours-simple.json`,
-    (err, data) => {
-      let tour = JSON.parse(data);
-      const id = tour.length;
-      const newTour = Object.assign({ id: id }, req.body);
-      tour.push(newTour);
-      fs.writeFile(
-        `${__dirname}/starter/dev-data/data/tours-simple.json`,
-        JSON.stringify(tour),
-        err => {
-          res.send(newTour);
-        }
-      );
-    }
-  );
+// const testTour = new Tour({
+//   name:"Swimming Panda",
+//   rating:6.9,
+//   price: 50
+// });
+// testTour.save().then((data)=>{
+//   console.log(data+"  saved new Schema Model"); 
+// }).catch(err=>{
+//   console.log('now saving');
+// })
+exports.createNewTour = async (req, res) => {
+  try{
+  //   const newTour = new Tour(req.body);
+  // newTour.save();
+
+  const newTour = await Tour.create(req.body);
+  console.log(newTour);
+  return res.status(201).send(newTour);
+  }
+  catch(err){
+    return res.send(err);
+  }
+  
 };
 
-exports.getParticularTour = (req, res) => {
-  const data = fs.readFile(
-    `${__dirname}/starter/dev-data/data/tours-simple.json`,
-    (err, d) => {
-      const id = req.params.id * 1;
-      const data = JSON.parse(d);
-      console.log(data);
-      const tour = data.find(ele => ele.id === id);
-      if (tour) return res.status(200).send(tour);
-      else res.status(400).send('not found');
-    }
-  );
+exports.getParticularTour = async(req, res) => {
+  try{
+    const Tours = await Tour.findOne({_id:req.params.id});
+    return res.status(200).send(Tours);
+  }catch(err){
+    console.log(err);
+    return res.status(400).send(err);
+  }
 };
 // const file = fs.readFileSync(              //reading synchronously file & then sending result.
 //   `${__dirname}/starter/dev-data/data/tours-simple.json`,
@@ -81,67 +76,25 @@ exports.getParticularTour = (req, res) => {
 //   res.send(JSON.parse(file));
 // });
 
-exports.updatingParticularTour = (req, res) => {
-  const id = req.params.id * 1;
-  fs.readFile(
-    `${__dirname}/starter/dev-data/data/tours-simple.json`,
-    (err, data) => {
-      const tours = JSON.parse(data);
-      // const tour = tours.find(ele => ele.id === id);
-      let tour, getidx;
-
-      for (let i = 0; i < tours.length; i++) {
-        if (tours[i].id === id) {
-          tour = tours[i];
-          getidx = i;
-          break;
-        }
-      }
-      console.log(req.body);
-
-      for (let key in req.body) {
-        let value = req.body[`${key}`];
-        console.log(`${key}: ${value}`);
-        tour[`${key}`] = value;
-      }
-
-      tours[getidx] = tour;
-      console.log(tour);
-      fs.writeFile(
-        `${__dirname}/starter/dev-data/data/tours-simple.json`,
-        JSON.stringify(tours),
-        err => {
-          res.send(tours);
-        }
-      );
-    }
-  );
+exports.updatingParticularTour = async(req, res) => {
+  try{
+    const id = req.params.id;
+    const Tours =await Tour.findOneAndUpdate({_id:id},req.body);
+    res.status(200).send(Tours);
+  }
+  catch(err){
+    console.log(err);
+    res.status(500).send("Not working");
+  }
 };
 
-exports.deleteParticularTour = (req, res) => {
-  fs.readFile(
-    `${__dirname}/starter/dev-data/data/tours-simple.json`,
-    (err, data) => {
-      let tours = JSON.parse(data);
-      const id = req.params.id * 1;
-      let getidx = 0;
-
-      for (let i = 0; i < tours.length; i++) {
-        const ele = tours[i];
-        if (ele.id === id) {
-          getidx = i;
-          break;
-        }
-      }
-      tours.splice(getidx, 1);
-      console.log(tours);
-      fs.writeFile(
-        `${__dirname}/starter/dev-data/data/tours-simple.json`,
-        JSON.stringify(tours),
-        err => {
-          res.send(tours);
-        }
-      );
-    }
-  );
+exports.deleteParticularTour = async(req, res) => {
+  try{
+    const Tours = await Tour.findOneAndDelete(req.params.id);
+    return res.status(200).send(Tours);
+  }
+  catch(err){
+    console.log(err);
+    return res.status(500).send(err);
+  }
 };

@@ -20,24 +20,6 @@ useUnifiedTopology: true })
 //   console.log("database connection established");
 // })
 
-const tourSchema=new mongoose.Schema({
-  name:String,
-  rating:Number,
-  price:Number
-});
-const Tour = mongoose.model('Tour',tourSchema);
-
-const testTour = new Tour({
-  name:"Swimming Panda",
-  rating:6.9,
-  price: 50
-});
-testTour.save().then((data)=>{
-  console.log(data+"  saved new Schema Model"); 
-}).catch(err=>{
-  console.log('now saving');
-})
-
 //start server
 console.log(process.env.PORT);
 const port = process.env.PORT || 3000;
