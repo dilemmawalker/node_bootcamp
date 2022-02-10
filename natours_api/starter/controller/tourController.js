@@ -11,8 +11,39 @@ exports.check_post = (req, res) => {
 
 exports.getAllTours = async(req, res) => {
   try{
-    const Tours = await Tour.find();
-    console.log(Tours);
+    //1)A) Filtering 
+    const queryObj = {...req.query};
+    const excludedFields = ['page','sort','limit','fields'];
+    excludedFields.forEach(ele=>{
+      delete queryObj[ele];
+    });
+
+    //1)B) Advanced Filtering
+    let queryStr=JSON.stringify(queryObj);
+    queryStr=queryStr.replace(/\b(gt|gte|lt|lte)\b/g,(match)=>{
+      `$${match}`
+    });
+
+    let query =  Tour.find(JSON.parse(queryStr));
+    console.log(req.query.sort)
+
+    //2) Sorting
+    if(req.params.sort)
+    query = query.sort(req.params.sort);
+
+    //3) Fields
+    if(req.query.fields){
+      console.log("Fields exists!!!");
+      const fields = req.query.fields.split(',').join(' ');
+      query = query.select(fields);
+    }
+
+    //4) Pagination
+
+    const Tours = await query;
+
+    // console.log(req.query,JSON.parse(queryStr));
+    // console.log(Tours);
     return res.status(201).send(Tours);
   }catch(err){
     console.log(err);

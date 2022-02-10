@@ -148,7 +148,5 @@
     "imageCover": "tour-10-cover.jpg",
     "images": ["tour-10-1.jpg", "tour-10-2.jpg", "tour-10-3.jpg"],
     "startDates": ["2021-12-16,10:00", "2022-01-16,10:00", "2022-12-12,10:00"]
-  },
-  { "id": 10 },
-  { "id": 11, "name": "new name", "duration": "100", "difficulty": "very easy" }
-]
+  }
+  ]
