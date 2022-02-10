@@ -6,7 +6,8 @@ const {
   createNewTour,
   getParticularTour,
   updatingParticularTour,
-  deleteParticularTour
+  deleteParticularTour,
+  aliasTopTours
 } = require(`${__dirname}/../controller/tourController`);
 
 const fs = require('fs');
@@ -21,6 +22,8 @@ app.use((req, res, next) => {
 //   .route('/')
 //   .get(checking)
 //   .post(check_post);
+
+tourRouter.route('/top-5-cheapest').get(aliasTopTours,getAllTours);
 tourRouter
   .route('/')
   .get(getAllTours)

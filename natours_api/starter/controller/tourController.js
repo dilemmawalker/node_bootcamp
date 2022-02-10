@@ -9,6 +9,12 @@ exports.check_post = (req, res) => {
   res.status(200).json({ message: 'Hello World', text: 'meri marzi' });
 };
 
+exports.aliasTopTours = async(req,res,next)=>{
+  req.query.limit = '5',
+  req.query.sort = 'price',
+  next();
+}
+
 exports.getAllTours = async(req, res) => {
   try{
     //1)A) Filtering 
@@ -28,8 +34,10 @@ exports.getAllTours = async(req, res) => {
     console.log(req.query.sort)
 
     //2) Sorting
-    if(req.params.sort)
-    query = query.sort(req.params.sort);
+    if(req.query.sort){
+      console.log("Sorting Done");
+    query = query.sort(req.query.sort);
+    }
 
     //3) Fields
     if(req.query.fields){
