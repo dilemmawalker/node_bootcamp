@@ -18,10 +18,8 @@ exports.aliasTopTours = async(req,res,next)=>{
 
 exports.getAllTours = async(req, res) => {
   try{
-    
     const features = new APIFeatures(Tour.find(),req.query).filter().sort().fields().pagination();
     const Tours = await features.query;
-
     // console.log(req.query,JSON.parse(queryStr));
     // console.log(Tours);
     return res.status(201).send(Tours);
@@ -109,3 +107,30 @@ exports.deleteParticularTour = async(req, res) => {
     return res.status(500).send(err);
   }
 };
+
+exports.getTourStats = async(req,res)=>{
+  try{
+    const stats = await Tour.aggregate([
+    {
+      $match:{ratingsAverage:{$gte:4.5}}
+    },
+    {
+      $group:{
+        _id:'$ratingsAverage',
+        numTours: {$sum:1},
+        numRatings: {$sum:'$ratingsQuantity'},
+        avgRating:{$avg:'$ratingsAverage'},
+        avgPrice: {$avg:'$price'},
+        minPrice: {$min:'$price'},
+        maxPrice: {$max:'$price'},
+      }
+    }
+  ]);
+  console.log("stats "+stats);
+  return res.status(200).send(stats)
+  }
+  catch(err){
+    console.log(err);
+    res.status(500).send(err);
+  }
+}
