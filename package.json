@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon natours_api/server.js",
     "start:dev": "nodemon natours_api/server.js",
-    "start:prod": "NODE_ENV=production nodemon natours_api/server.js"
+    "start:prod": "NODE_ENV=production nodemon natours_api/server.js",
+    "debug": "ndb natours_api/ server.js"
   },
   "repository": {
     "type": "git",
@@ -40,6 +41,8 @@
     "eslint-plugin-promise": "^6.0.0",
     "eslint-plugin-react": "^7.28.0",
     "eslint-plugin-vue": "^8.2.0",
+    "ndb": "^1.1.5",
+    "ndp": "^1.0.2",
     "nodemon": "^2.0.15"
   }
 }
